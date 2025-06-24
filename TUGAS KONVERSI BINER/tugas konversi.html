@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Konversi & Kalkulator</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-image: url('bgg.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .wrapper {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .container, .calc-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #ba28eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #c952d2;
+    }
+
+    .result {
+      background-color: #f0f8ff;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+
+    .result p {
+      margin: 8px 0;
+    }
+
+    .footer {
+      margin-top: 30px;
+      color: white;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- KONVERSI BILANGAN -->
+    <div class="container">
+      <h2>Konversi Bilangan</h2>
+      <input type="text" id="inputValue" placeholder="Masukkan bilangan" />
+      <select id="baseSelect">
+        <option value="2">Biner</option>
+        <option value="8">Oktal</option>
+        <option value="10" selected>Desimal</option>
+        <option value="16">Heksadesimal</option>
+      </select>
+      <button onclick="konversi()">Konversi</button>
+
+      <div class="result" id="resultBox" style="display:none;">
+        <p id="desimalRow"><strong>Desimal:</strong> <span id="desimal"></span></p>
+        <p id="binerRow"><strong>Biner:</strong> <span id="biner"></span></p>
+        <p id="oktalRow"><strong>Oktal:</strong> <span id="oktal"></span></p>
+        <p id="heksaRow"><strong>Heksadesimal:</strong> <span id="heksa"></span></p>
+      </div>
+    </div>
+
+    <!-- KALKULATOR OPERATOR -->
+    <div class="calc-container">
+      <h2>Kalkulator Operator</h2>
+      <label for="angka1">Angka Pertama</label>
+      <input type="text" id="angka1" placeholder="Masukkan angka" />
+
+      <label for="basis1">Basis Bilangan</label>
+      <select id="basis1">
+        <option value="">-- Pilih --</option>
+        <option value="10">Desimal</option>
+        <option value="2">Biner</option>
+        <option value="8">Oktal</option>
+        <option value="16">Heksadesimal</option>
+      </select>
+
+      <label for="operator">Operator</label>
+      <select id="operator">
+        <option value="">-- Pilih --</option>
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select>
+
+      <label for="angka2">Angka Kedua</label>
+      <input type="text" id="angka2" placeholder="Masukkan angka kedua" />
+
+      <label for="basis2">Basis Bilangan</label>
+      <select id="basis2">
+        <option value="">-- Pilih --</option>
+        <option value="10">Desimal</option>
+        <option value="2">Biner</option>
+        <option value="8">Oktal</option>
+        <option value="16">Heksadesimal</option>
+      </select>
+
+      <button onclick="hitung()">Hitung</button>
+
+      <div class="result" id="calcResultBox" style="display:none;">
+        <p><strong>Desimal:</strong> <span id="calcDesimal"></span></p>
+        <p><strong>Biner:</strong> <span id="calcBiner"></span></p>
+        <p><strong>Oktal:</strong> <span id="calcOktal"></span></p>
+        <p><strong>Heksadesimal:</strong> <span id="calcHeksa"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">by Adinda Putri Yolanda</footer>
+
+  <script>
+    // Fungsi konversi
+    function konversi() {
+      const input = document.getElementById("inputValue").value.trim();
+      const base = parseInt(document.getElementById("baseSelect").value);
+      const decimalValue = parseInt(input, base);
+
+      if (isNaN(decimalValue)) {
+        alert("Input tidak valid. Pastikan nilai sesuai dengan basis yang dipilih.");
+        document.getElementById("resultBox").style.display = "none";
+        return;
+      }
+
+      const absValue = Math.abs(decimalValue); // ✅ Perbaikan: gunakan nilai absolut
+
+      document.getElementById("resultBox").style.display = "block";
+
+      document.getElementById("desimalRow").style.display = (base === 10) ? "none" : "block";
+      document.getElementById("binerRow").style.display = (base === 2) ? "none" : "block";
+      document.getElementById("oktalRow").style.display = (base === 8) ? "none" : "block";
+      document.getElementById("heksaRow").style.display = (base === 16) ? "none" : "block";
+
+      document.getElementById("desimal").innerText = decimalValue.toString(10);
+      document.getElementById("biner").innerText = absValue.toString(2); // tanpa minus
+      document.getElementById("oktal").innerText = absValue.toString(8); // tanpa minus
+      document.getElementById("heksa").innerText = absValue.toString(16).toUpperCase(); // tanpa minus
+    }
+
+    // Fungsi kalkulator operator
+    function hitung() {
+      const angka1 = document.getElementById("angka1").value.trim();
+      const basis1 = document.getElementById("basis1").value;
+      const operator = document.getElementById("operator").value;
+      const angka2 = document.getElementById("angka2").value.trim();
+      const basis2 = document.getElementById("basis2").value;
+
+      if (!angka1 || !angka2 || !basis1 || !basis2 || !operator) {
+        alert("Mohon lengkapi semua field terlebih dahulu.");
+        return;
+      }
+
+      const num1 = parseInt(angka1, parseInt(basis1));
+      const num2 = parseInt(angka2, parseInt(basis2));
+
+      if (isNaN(num1) || isNaN(num2)) {
+        alert("Input tidak valid sesuai basis bilangan.");
+        return;
+      }
+
+      let hasil;
+      switch (operator) {
+        case '+': hasil = num1 + num2; break;
+        case '-': hasil = num1 - num2; break;
+        case '*': hasil = num1 * num2; break;
+        case '/':
+          if (num2 === 0) {
+            alert("Tidak dapat membagi dengan nol.");
+            return; 
+          }
+          hasil = num1 / num2;
+          break;
+        default:
+          alert("Operator tidak dikenal");
+          return;
+      }
+
+      document.getElementById("calcResultBox").style.display = "block";
+      document.getElementById("calcDesimal").innerText = hasil;
+      document.getElementById("calcBiner").innerText = Math.floor(hasil).toString(2);
+      document.getElementById("calcOktal").innerText = Math.floor(hasil).toString(8);
+      document.getElementById("calcHeksa").innerText = Math.floor(hasil).toString(16).toUpperCase();
+    }
+  </script>
+</body>
+</html>
